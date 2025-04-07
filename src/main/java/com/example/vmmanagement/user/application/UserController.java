@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,7 +63,7 @@ public class UserController {
     @ApiResponse(responseCode = "409", description = "User with this email or CPF already exists")
     @SecurityRequirements
     @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody UserDtoRequest userDtoCreat) {
+    public ResponseEntity<String> create(@RequestBody @Valid UserDtoRequest userDtoCreat) {
         if(userDtoCreat.getEmail() == null || userDtoCreat.getEmail().isEmpty() || 
            userDtoCreat.getPassword() == null || userDtoCreat.getPassword().isEmpty()) {
             return ResponseEntity.badRequest().body("Email and password are required");

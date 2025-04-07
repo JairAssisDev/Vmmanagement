@@ -1,19 +1,26 @@
 package com.example.vmmanagement.user.application.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Schema(description = "User registration request")
 public class UserDtoRequest {
     @Schema(description = "User's full name", example = "John Doe", required = true)
+    @NotBlank(message = "campo obrigatorio")
     private String nome;
 
-    @Schema(description = "CPF (Brazilian ID)", example = "123.456.789-00", required = true)
+    @Schema(description = "CPF", example = "123.456.789-00", required = true)
+    @CPF(message = "CPF inválido")
     private String cpf;
 
     @Schema(description = "Email address", example = "john.doe@example.com", required = true)
+    @Email(message = "Email inválido")
     private String email;
 
     @Schema(description = "Password", example = "StrongP@ssw0rd", required = true)
+    @NotBlank(message = "campo obrigatorio")
     private String password;
 
     public UserDtoRequest(String nome, String cpf, String email, String password) {

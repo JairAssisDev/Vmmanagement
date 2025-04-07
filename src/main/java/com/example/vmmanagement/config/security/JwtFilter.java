@@ -20,7 +20,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final com.example.vmmanagement.config.security.JwtUtil jwtUtil;
     private final com.example.vmmanagement.config.security.CustomUserDetailsService userDetailsService;
 
-    public JwtFilter(com.example.vmmanagement.config.Security.JwtUtil jwtUtil, com.example.vmmanagement.config.security.CustomUserDetailsService userDetailsService) {
+    public JwtFilter(com.example.vmmanagement.config.security.JwtUtil jwtUtil, com.example.vmmanagement.config.security.CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }

@@ -16,10 +16,7 @@ public class SecurityContext {
         this.jwtUtil = jwtUtil;
     }
 
-    /**
-     * Get the current authenticated user's email
-     * @return the email of the authenticated user
-     */
+
     public String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && 
@@ -28,11 +25,7 @@ public class SecurityContext {
         }
         return null;
     }
-    
-    /**
-     * Get the current authenticated user's ID from the JWT token
-     * @return the UUID of the authenticated user
-     */
+
     public UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -42,7 +35,7 @@ public class SecurityContext {
                 try {
                     return jwtUtil.extractUserId(jwt);
                 } catch (Exception e) {
-                    // Log error silently, authentication token might not include userId
+
                 }
             }
         }

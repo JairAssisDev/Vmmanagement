@@ -1,6 +1,6 @@
 package com.example.vmmanagement.user.domain.service;
 
-import com.example.vmmanagement.config.Security.JwtUtil;
+import com.example.vmmanagement.config.security.JwtUtil;
 import com.example.vmmanagement.user.application.dto.UserDtoReponse;
 import com.example.vmmanagement.user.application.dto.UserDtoRequest;
 import com.example.vmmanagement.user.domain.model.User;
