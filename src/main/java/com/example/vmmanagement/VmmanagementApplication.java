@@ -17,10 +17,9 @@ public class VmmanagementApplication {
         SpringApplication.run(VmmanagementApplication.class, args);
     }
     @Bean
-    @Profile("dev")
+    @Profile({"dev","prod"})
     public CommandLineRunner devProfile(UserService userService) {
         UserDtoRequest user = new UserDtoRequest("jair", "1231231233", "admin@admin.com", "123456");
-        System.out.print(user.toString());
         return args -> {
             userService.createUser(user);
         };
