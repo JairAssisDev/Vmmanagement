@@ -4,20 +4,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.UUID;
 
-@Schema(description = "Virtual machine creation request")
+@Schema(description = "Solicitação de criação de máquina virtual")
 public class VmEntityDtoCreate {
 
-    @Schema(description = "Display name for the VM", example = "Development Server", required = true)
+    @Schema(description = "Nome de exibição da VM", example = "Development Server", required = true)
     private String displayName;
     
-    @Schema(description = "Number of CPU cores", example = "2", required = true)
+    @Schema(description = "Número de núcleos de CPU", example = "2", required = true)
     private int cpu;
     
-    @Schema(description = "RAM memory in MB", example = "4096", required = true)
+    @Schema(description = "Memória RAM em MB", example = "4096", required = true)
     private int ram;
     
     @Schema(
-        description = "User ID that owns this VM (automatically set from JWT token, not required in request)",
+        description = "ID do usuário que possui esta VM (definido automaticamente a partir do token JWT, não necessário na solicitação)",
         example = "123e4567-e89b-12d3-a456-426614174000",
         required = false
     )

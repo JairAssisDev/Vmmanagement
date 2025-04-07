@@ -84,12 +84,10 @@ public class VmService {
         return false;
     }
 
-    /**
-     * Check if a VM is owned by a specific user
-     * @param vmId the VM ID to check
-     * @param userId the user ID to check ownership against
-     * @return true if the VM is owned by the user, false otherwise
-     */
+    public boolean maxSizeReached(UUID id) {
+        List<VmEntity> vms = IVmRepository.findAllByUserId(id);
+        return vms.size() == 5 ? true:false;
+    }
     public boolean isVmOwnedByUser(UUID vmId, UUID userId) {
         Optional<VmEntity> vmOptional = IVmRepository.findById(vmId);
         if (vmOptional.isPresent()) {

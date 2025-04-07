@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/vm")
-@Tag(name = "Virtual Machine Management", description = "Endpoints for VM operations")
+@Tag(name = "Gerenciamento de máquinas virtuais", description = "Pontos de extremidade para operações de VM")
 @SecurityRequirement(name = "bearerAuth")
 public class VmController {
 
@@ -34,28 +34,30 @@ public class VmController {
     }
 
     @Operation(
-            summary = "Create a new virtual machine",
-            description = "Creates a virtual machine for the authenticated user"
+            summary = "Crie uma nova máquina virtual",
+            description = "Cria uma máquina virtual para o usuário autenticado"
     )
     @ApiResponse(
             responseCode = "201",
-            description = "VM created successfully",
+            description = "VM criada com sucesso",
             content = @Content(schema = @Schema(implementation = VmEntityDtoResponse.class))
     )
-    @ApiResponse(responseCode = "400", description = "Invalid request data")
-    @ApiResponse(responseCode = "404", description = "User not found")
+    @ApiResponse(responseCode = "400", description = "Dados de solicitação inválidos")
+    @ApiResponse(responseCode = "401", description = "Usuario não autenticado")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @ApiResponse(responseCode = "429 ",description = "Quantidade maxima de Vms Atingida")
     @PostMapping
     public ResponseEntity<VmEntityDtoResponse> createVm(@RequestBody VmEntityDtoCreate dtoCreate) {
         try {
-            // Get current user ID from JWT token
             UUID currentUserId = securityContext.getCurrentUserId();
             if (currentUserId == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
-            
-            // Set the user ID from the token
+
             dtoCreate.setIdUser(currentUserId);
-            
+            if (vmService.maxSizeReached(currentUserId)){
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+            };
             VmEntityDtoResponse response = vmService.createVm(dtoCreate);
             if (response != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -67,16 +69,16 @@ public class VmController {
     }
 
     @Operation(
-            summary = "List authenticated user's virtual machines",
-            description = "Returns all virtual machines belonging to the authenticated user"
+            summary = "Listar máquinas virtuais do usuário autenticado",
+            description = "Retorna todas as máquinas virtuais pertencentes ao usuário"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "VMs retrieved successfully",
+            description = "VMs Listadas com sucesso",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = VmEntityDtoResponse.class)))
     )
-    @ApiResponse(responseCode = "401", description = "User not authenticated")
-    @ApiResponse(responseCode = "404", description = "User not found")
+    @ApiResponse(responseCode = "401", description = "Usuario não autenticado")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @GetMapping
     public ResponseEntity<?> getCurrentUserVms() {
         try {
@@ -93,13 +95,14 @@ public class VmController {
     }
 
     @Operation(
-            summary = "Update VM status",
-            description = "Changes the running status of a virtual machine owned by the authenticated user"
+            summary = "Mudar status da VM",
+            description = "Altera o status de execução de uma máquina virtual de propriedade do usuário"
     )
-    @ApiResponse(responseCode = "200", description = "VM status updated successfully")
-    @ApiResponse(responseCode = "400", description = "Invalid status value")
-    @ApiResponse(responseCode = "403", description = "Not authorized to update this VM")
-    @ApiResponse(responseCode = "404", description = "VM not found")
+    @ApiResponse(responseCode = "200", description = "a alteração do status da VM foi alterado com sucesso")
+    @ApiResponse(responseCode = "400", description = "valor do status invalido")
+    @ApiResponse(responseCode = "401", description = "Usuario não autenticado")
+    @ApiResponse(responseCode = "403", description = "sem alteração para alterado a VM")
+    @ApiResponse(responseCode = "404", description = "VM não encontrada")
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateVmStatus(
             @PathVariable UUID id,
@@ -111,7 +114,6 @@ public class VmController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             
-            // First check if VM belongs to current user
             if (!vmService.isVmOwnedByUser(id, currentUserId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
@@ -128,20 +130,20 @@ public class VmController {
     }
 
     @Operation(
-            summary = "Delete a virtual machine",
-            description = "Permanently removes a virtual machine owned by the authenticated user"
+            summary = "Excluir uma máquina virtual",
+            description = "Remove permanentemente uma máquina virtual de propriedade do usuário autenticado"
     )
-    @ApiResponse(responseCode = "204", description = "VM deleted successfully")
-    @ApiResponse(responseCode = "403", description = "Not authorized to delete this VM")
-    @ApiResponse(responseCode = "404", description = "VM not found")
+    @ApiResponse(responseCode = "204", description = "VM excluída com sucesso")
+    @ApiResponse(responseCode = "401", description = "Usuario não autenticado")
+    @ApiResponse(responseCode = "403", description = "Não autorizado a excluir esta VM")
+    @ApiResponse(responseCode = "404", description = "VM não encontrada")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVm(@PathVariable UUID id) {
         UUID currentUserId = securityContext.getCurrentUserId();
         if (currentUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        // First check if VM belongs to current user
+
         if (!vmService.isVmOwnedByUser(id, currentUserId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

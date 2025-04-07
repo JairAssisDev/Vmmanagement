@@ -19,7 +19,7 @@ public class ValidationExceptionHandler {
                 .collect(Collectors.toMap(
                         fieldError -> fieldError.getField(),
                         fieldError -> fieldError.getDefaultMessage(),
-                        (existing, replacement) -> existing // em caso de campos duplicados
+                        (existing, replacement) -> existing
                 ));
 
         Map<String, Object> response = new HashMap<>();

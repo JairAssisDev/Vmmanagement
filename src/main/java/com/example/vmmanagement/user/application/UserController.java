@@ -60,13 +60,13 @@ public class UserController {
     )
     @ApiResponse(responseCode = "201", description = "User created successfully")
     @ApiResponse(responseCode = "400", description = "Missing required fields")
-    @ApiResponse(responseCode = "409", description = "User with this email or CPF already exists")
+    @ApiResponse(responseCode = "409", description = "Usuário com este e-mail ou CPF já existe")
     @SecurityRequirements
     @PostMapping("/create")
     public ResponseEntity<String> create(@RequestBody @Valid UserDtoRequest userDtoCreat) {
         if(userDtoCreat.getEmail() == null || userDtoCreat.getEmail().isEmpty() || 
            userDtoCreat.getPassword() == null || userDtoCreat.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("Email and password are required");
+            return ResponseEntity.badRequest().body("E-mail e senha são obrigatórios");
         }
         try {
             userService.createUser(userDtoCreat);

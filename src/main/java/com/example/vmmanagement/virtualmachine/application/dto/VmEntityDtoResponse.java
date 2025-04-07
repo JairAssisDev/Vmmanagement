@@ -12,13 +12,13 @@ public class VmEntityDtoResponse {
     @Schema(description = "Display name of the VM", example = "Development Server")
     private String displayName;
     
-    @Schema(description = "Number of CPU cores", example = "2")
+    @Schema(description = "Número de núcleos de CPU", example = "2")
     private int cpu;
     
-    @Schema(description = "Current VM status", example = "RUNNING", allowableValues = {"RUNNING", "STOPPED", "PAUSED"})
+    @Schema(description = "Status atual da VM", example = "RUNNING", allowableValues = {"RUNNING", "STOPPED", "PAUSED"})
     private String status;
     
-    @Schema(description = "RAM memory in MB", example = "4096")
+    @Schema(description = "Memória RAM em MB", example = "4096")
     private int ram;
 
     public VmEntityDtoResponse(UUID id, String displayName, int cpu, String status, int ram) {
